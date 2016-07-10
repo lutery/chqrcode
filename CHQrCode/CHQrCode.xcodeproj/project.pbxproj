@@ -14,6 +14,8 @@
 		757169781D32890E0016EDFD /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 757169761D32890E0016EDFD /* LaunchScreen.storyboard */; };
 		757169831D32890E0016EDFD /* CHQrCodeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 757169821D32890E0016EDFD /* CHQrCodeTests.swift */; };
 		7571698E1D32890E0016EDFD /* CHQrCodeUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7571698D1D32890E0016EDFD /* CHQrCodeUITests.swift */; };
+		7571699D1D328BF80016EDFD /* CHQRcodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7571699C1D328BF80016EDFD /* CHQRcodeView.swift */; };
+		7571699F1D328C450016EDFD /* ExUIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7571699E1D328C450016EDFD /* ExUIImage.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -47,6 +49,8 @@
 		757169891D32890E0016EDFD /* CHQrCodeUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CHQrCodeUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		7571698D1D32890E0016EDFD /* CHQrCodeUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CHQrCodeUITests.swift; sourceTree = "<group>"; };
 		7571698F1D32890E0016EDFD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		7571699C1D328BF80016EDFD /* CHQRcodeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CHQRcodeView.swift; sourceTree = "<group>"; };
+		7571699E1D328C450016EDFD /* ExUIImage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExUIImage.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -97,6 +101,7 @@
 		7571696C1D32890E0016EDFD /* CHQrCode */ = {
 			isa = PBXGroup;
 			children = (
+				7571699B1D328B580016EDFD /* CFQRCodeManager */,
 				7571696D1D32890E0016EDFD /* AppDelegate.swift */,
 				7571696F1D32890E0016EDFD /* ViewController.swift */,
 				757169711D32890E0016EDFD /* Main.storyboard */,
@@ -123,6 +128,15 @@
 				7571698F1D32890E0016EDFD /* Info.plist */,
 			);
 			path = CHQrCodeUITests;
+			sourceTree = "<group>";
+		};
+		7571699B1D328B580016EDFD /* CFQRCodeManager */ = {
+			isa = PBXGroup;
+			children = (
+				7571699C1D328BF80016EDFD /* CHQRcodeView.swift */,
+				7571699E1D328C450016EDFD /* ExUIImage.swift */,
+			);
+			name = CFQRCodeManager;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -265,6 +279,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7571699F1D328C450016EDFD /* ExUIImage.swift in Sources */,
+				7571699D1D328BF80016EDFD /* CHQRcodeView.swift in Sources */,
 				757169701D32890E0016EDFD /* ViewController.swift in Sources */,
 				7571696E1D32890E0016EDFD /* AppDelegate.swift in Sources */,
 			);
@@ -415,6 +431,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = CHQrCode/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = cn.com.lutery.CHQrCode;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -427,6 +444,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = CHQrCode/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = cn.com.lutery.CHQrCode;
 				PRODUCT_NAME = "$(TARGET_NAME)";
