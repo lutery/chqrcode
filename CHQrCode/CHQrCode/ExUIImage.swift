@@ -66,6 +66,11 @@ extension UIImage{
             var ciImage = UIImage.qrImage(WithString: string);
             var qrImage = UIImage.qrImage(CodeImage: ciImage, Size: size);
 //            qrImage = self.qrImage
+            qrImage = UIImage.qrImage(CodeImage: qrImage, Add: iconImage, ImageType: type, Scale: scale);
+            
+            DispatchQueue.main.async(execute: {
+                completion(qrImage!)
+            })
         })
     }
     
@@ -78,7 +83,7 @@ extension UIImage{
      *  @param completion  成功回调block
      */
     func qrImage(_ qrImage:UIImage, AddBgImage bgImage:UIImage, Size size:CGFloat, Completion completion: (UIImage) -> Void){
-        
+        self.qrImage(qrImage, ImageType: CenterImgType.Square, AddBgImage: bgImage, Size: size, Completion: completion);
     }
     
     /**
@@ -91,9 +96,30 @@ extension UIImage{
      *  @param completion  成功回调
      */
     func qrImage(_ qrImage:UIImage, ImageType type:CenterImgType, AddBgImage bgImage:UIImage, Size size:CGFloat, Completion completion: (UIImage) -> Void){
+//        assert(completion == nil, "必须传入完成回调");
         
+        DispatchQueue.global().async(execute: {
+            var bgImg:UIImage? = nil;
+            var qrImg:UIImage? = nil;
+            
+            bgImg = UIImage.imageCompress(Source: bgImage, TargetSize: CGSize(width: size, height: size));
+            qrImg = UIImage.imageCompress(Source: qrImage, TargetSize: qrImage.size);
+            
+            var newImage = UIImage.qrCode(bgImg, AddIconImage: qrImg, CenterImageType: type, Scale: 1.0 * (qrImg?.size.width)! / (bgImg?.size.width)!);
+            
+            DispatchQueue.main.async(execute: {
+                completion(newImage!);
+            });
+        });
     }
     
+    /**
+     * 快速创建CIImage图像
+     *
+     * @param WithString 传入图像的路径
+     *
+     * @return CIImage? 返回创建好的CIImage图像
+     */
     private class func qrImage(WithString string:NSString) -> CIImage?{
         let qrFilter = CIFilter(name: "CIQRCodeGenerator");
         qrFilter?.setDefaults();
@@ -191,6 +217,88 @@ extension UIImage{
         UIGraphicsEndImageContext();
         
         return output;
+    }
+    
+    private class func imageCompress(Source source:UIImage?, TargetSize size:CGSize) -> UIImage?{
+        var newImage:UIImage? = nil;
+        let imageSize = source?.size;
+        let width:CGFloat = (imageSize?.width)!;
+        let height:CGFloat = (imageSize?.height)!;
+        let targetWidth:CGFloat = size.width;
+        let targetHeight:CGFloat = size.height;
+        var scaleFactor:CGFloat = 0.0;
+        var scaledWidth:CGFloat = targetWidth;
+        var scaledHeight:CGFloat = targetHeight;
+        var thumbnailPoint = CGPoint(x: 0.0, y: 0.0);
+        
+        if __CGSizeEqualToSize(imageSize!, size) == false {
+            let widthFactor:CGFloat = targetWidth / width;
+            let heightFactor:CGFloat = targetHeight / height;
+            
+            if widthFactor > heightFactor {
+                scaleFactor = widthFactor;
+            }
+            else{
+                scaleFactor = heightFactor;
+            }
+            
+            scaledWidth = width * scaleFactor;
+            scaledHeight = height * scaleFactor;
+            
+            if widthFactor > heightFactor {
+                thumbnailPoint.y = (targetHeight - scaledHeight) * 0.5;
+            }
+            else if widthFactor < heightFactor {
+                thumbnailPoint.x = (targetWidth - scaledWidth) * 0.5;
+            }
+        }
+        
+        UIGraphicsBeginImageContext(size);
+        
+        var thumbnailRect = CGRect.zero;
+        thumbnailRect.origin = thumbnailPoint;
+        thumbnailRect.size.width = scaledWidth;
+        thumbnailRect.size.height = scaledHeight;
+        
+        source?.draw(in: thumbnailRect);
+        newImage = UIGraphicsGetImageFromCurrentImageContext();
+        if newImage == nil {
+            
+        }
+        
+        UIGraphicsEndImageContext();
+        
+        return UIImage(cgImage: (newImage?.cgImage!)!, scale: UIScreen.main().scale, orientation: UIImageOrientation.up);
+    }
+    
+    private class func qrCode(_ qrImage:UIImage?, AddIconImage iconImage:UIImage?, CenterImageType type:CenterImgType, Scale scale:CGFloat) -> UIImage?{
+        var iconImage = iconImage
+        let screenScale = UIScreen.main().scale;
+        var rect = CGRect(x: 0, y: 0, width: (qrImage?.size.width)! * screenScale, height: (qrImage?.size.height)! * screenScale);
+        
+        UIGraphicsBeginImageContextWithOptions(rect.size, true, screenScale);
+        
+        qrImage?.draw(in: rect);
+        
+        if iconImage != nil {
+            let avatarSize = CGSize(width: rect.size.width * scale, height: rect.size.height * scale);
+            let x = (rect.size.width - avatarSize.width) * 0.5;
+            let y = (rect.size.height - avatarSize.height) * 0.5;
+            
+            if type == CenterImgType.Circle {
+                iconImage = UIImage.createCircularImage(IconImage: iconImage);
+            }
+            else if type == CenterImgType.CornorRadious {
+                iconImage = UIImage.image(WithRoundedCorners: iconImage, Size: avatarSize, CornerRadius: 5.0);
+            }
+            
+            iconImage?.draw(in: CGRect(x: x, y: y, width: avatarSize.width, height: avatarSize.height));
+        }
+        
+        var result = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+        
+        return UIImage(cgImage: (result?.cgImage!)!, scale: screenScale, orientation: UIImageOrientation.up);
     }
     
 //    private class func qrImage(
